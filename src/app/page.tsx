@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 
 type Ttask = { title: string; details: string };
 
@@ -9,10 +9,37 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const [edit, setEdit] = useState<number | null>(null);
+  const [error, setError] = useState("");
+
+  // data load
+  useEffect(() => {
+    try {
+      const savedTask = localStorage.getItem("tasks");
+      if (savedTask) {
+        setTasks(JSON.parse(savedTask));
+      }
+    } catch (error) {
+      console.error("loading error from localStorage", error);
+      setTasks([]);
+    }
+  }, []);
+
+  // data save
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    } catch (error) {
+      console.error("Saving error from localStorage", error);
+    }
+  }, [tasks]);
 
   const addTask = () => {
-    if (title.trim() === "" || details.trim() === "") return;
-
+    if (title.trim() === "" || details.trim() === "") {
+      setError(`Title & Details can't be empty!`);
+      return;
+    }
+    setError("");
     if (edit !== null) {
       const updateTask = [...tasks];
       updateTask[edit] = { title, details };
@@ -30,6 +57,7 @@ export default function Home() {
     setTitle(tasks[index].title);
     setDetails(tasks[index].details);
     setEdit(index);
+    setError("")
   };
 
   const removeTask = (index: number) => {
