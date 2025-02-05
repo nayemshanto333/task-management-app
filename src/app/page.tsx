@@ -77,22 +77,22 @@ export default function Home() {
   };
 
   return (
-    <main className="flex justify-center items-center h-screen bg-sky-200 px-2.5 mx-auto">
-      <div className="w-full max-w-screen-xl mx-auto bg-sky-300 py-10 px-5 rounded-lg">
-        <h1 className=" text-xl md:text-3xl font-bold text-sky-600 text-center">
+    <main className="flex justify-center items-center h-screen bg-sky-200 px-2.5 mx-auto ">
+      <div className="w-full max-w-screen-xl mx-auto bg-sky-300 py-10 px-5 rounded-lg ">
+        <h1 className=" text-xl md:text-3xl font-bold text-sky-600 text-center ">
           Task Management Application
         </h1>
 
         {/* Task length  */}
-        <div className="flex justify-around items-center">
-          <p className="text-center mt-2 font-bold text-slate-500 text-lg">
-            Total Task: {tasks.length.toLocaleString()}
+        <div className="flex justify-around items-center ">
+          <p className="text-center mt-2 font-bold text-gray-600 text-sm sm:text-lg">
+            Total : {tasks.length.toLocaleString()}
           </p>
-          <p className="text-center mt-2 font-bold text-slate-500 text-lg">
-            Pending Task: {tasks.filter((task)=>!task.completed).length}
+          <p className="text-center mt-2 font-bold text-red-500 text-sm sm:text-lg">
+            Pending : {tasks.filter((task)=>!task.completed).length}
           </p>
-          <p className="text-center mt-2 font-bold text-slate-500 text-lg">
-            Complete Task: {tasks.filter((task)=> task.completed).length}
+          <p className="text-center mt-2 font-bold text-green-500 text-sm sm:text-lg">
+            Complete : {tasks.filter((task)=> task.completed).length}
           </p>
         </div>
         <hr className="my-3" />
@@ -100,7 +100,7 @@ export default function Home() {
         {/* Input section */}
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-10 ">
-          <div className="flex flex-col w-full md:w-1/2 mx-auto  sm:p-5 space-y-2 bg-sky-100 rounded-md shadow-lg">
+          <div className="flex flex-col w-full md:w-1/2 mx-auto  p-5 space-y-2 bg-sky-100 rounded-md shadow-lg">
             <input
               type="text"
               value={title}
@@ -123,7 +123,7 @@ export default function Home() {
             </button>
           </div>
           {/* Output section */}
-          <div className="w-full md:w-1/2 mx-auto sm:px-5 space-y-2 ">
+          <div className="w-full md:w-1/2 mx-auto sm:px-5 space-y-2 overflow-y-auto max-h-96">
             {tasks.length > 0 ? (
               tasks.map((task, i) => (
                 <div
