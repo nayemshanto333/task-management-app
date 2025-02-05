@@ -34,6 +34,8 @@ export default function Home() {
     }
   }, [tasks]);
 
+  // Tasks add
+
   const addTask = () => {
     if (title.trim() === "" || details.trim() === "") {
       setError(`Title & Details can't be empty!`);
@@ -57,7 +59,7 @@ export default function Home() {
     setTitle(tasks[index].title);
     setDetails(tasks[index].details);
     setEdit(index);
-    setError("")
+    setError("");
   };
 
   const removeTask = (index: number) => {
