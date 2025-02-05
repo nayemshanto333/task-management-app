@@ -1,8 +1,8 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-type Ttask = { title: string; details: string };
+type Ttask = { title: string; details: string; completed: boolean };
 
 export default function Home() {
   const [tasks, setTasks] = useState<Ttask[]>([]);
@@ -44,11 +44,15 @@ export default function Home() {
     setError("");
     if (edit !== null) {
       const updateTask = [...tasks];
-      updateTask[edit] = { title, details };
+      updateTask[edit] = {
+        title,
+        details,
+        completed: updateTask[edit].completed,
+      };
       setTasks(updateTask);
       setEdit(null);
     } else {
-      setTasks([...tasks, { title, details }]);
+      setTasks([...tasks, { title, details, completed: false }]);
     }
 
     setDetails("");
@@ -66,6 +70,12 @@ export default function Home() {
     setTasks(tasks.filter((_, i) => i !== index));
   };
 
+  const completedCheckBox = (index: number) => {
+    const updateTasks = [...tasks];
+    updateTasks[index].completed = !updateTasks[index].completed;
+    setTasks(updateTasks);
+  };
+
   return (
     <main className="flex justify-center items-center h-screen bg-sky-200 px-2.5 mx-auto">
       <div className="w-full max-w-screen-xl mx-auto bg-sky-300 py-10 px-5 rounded-lg">
@@ -74,15 +84,23 @@ export default function Home() {
         </h1>
 
         {/* Task length  */}
-        <p className="text-center mt-2 font-bold text-slate-500 text-lg">
-          Total Task: {tasks.length.toLocaleString()}
-        </p>
+        <div className="flex justify-around items-center">
+          <p className="text-center mt-2 font-bold text-slate-500 text-lg">
+            Total Task: {tasks.length.toLocaleString()}
+          </p>
+          <p className="text-center mt-2 font-bold text-slate-500 text-lg">
+            Pending Task: {tasks.filter((task)=>!task.completed).length}
+          </p>
+          <p className="text-center mt-2 font-bold text-slate-500 text-lg">
+            Complete Task: {tasks.filter((task)=> task.completed).length}
+          </p>
+        </div>
         <hr className="my-3" />
 
         {/* Input section */}
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-10 ">
-          <div className="flex flex-col w-full md:w-1/2 mx-auto  sm:p-5 space-y-2 ">
+          <div className="flex flex-col w-full md:w-1/2 mx-auto  sm:p-5 space-y-2 bg-sky-100 rounded-md shadow-lg">
             <input
               type="text"
               value={title}
@@ -110,12 +128,30 @@ export default function Home() {
               tasks.map((task, i) => (
                 <div
                   key={i}
-                  className="bg-sky-100 p-5 rounded-md space-y-1 shadow-md"
+                  className={` p-5 rounded-md space-y-1 shadow-md ${
+                    task.completed ? "bg-sky-200" : "bg-gray-200"
+                  }`}
                 >
-                  <h1 className="font-bold text-base md:text-xl">
-                    {task.title}
-                  </h1>
-                  <p className="text-[14px] md:text-base pb-2">
+                  <div className="flex justify-between items-center">
+                    <h1
+                      className={`font-bold text-base md:text-xl ${
+                        task.completed ? "text-sky-400" : ""
+                      }`}
+                    >
+                      {task.title}
+                    </h1>
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => completedCheckBox(i)}
+                      className="w-5 h-5"
+                    />
+                  </div>
+                  <p
+                    className={`text-[14px] md:text-base pb-2 ${
+                      task.completed ? "text-sky-400 " : ""
+                    }`}
+                  >
                     {task.details}
                   </p>
                   <div className="flex items-center gap-2 md:gap-4 ">
@@ -123,7 +159,9 @@ export default function Home() {
 
                     <button
                       onClick={() => editTask(i)}
-                      className="bg-green-500 rounded px-3 py-1 text-white text-xs sm:text-[14px]"
+                      className={` rounded px-3 py-1 text-white text-xs sm:text-[14px] ${
+                        task.completed ? "bg-green-300" : "bg-green-500"
+                      }`}
                     >
                       Edit
                     </button>
@@ -132,7 +170,9 @@ export default function Home() {
 
                     <button
                       onClick={() => removeTask(i)}
-                      className="bg-red-500 rounded px-3 py-1 text-white text-xs sm:text-[14px]"
+                      className={` rounded px-3 py-1 text-white text-xs sm:text-[14px] ${
+                        task.completed ? "bg-red-300" : "bg-red-500"
+                      }`}
                     >
                       Remove
                     </button>
